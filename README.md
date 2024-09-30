@@ -19,10 +19,12 @@ Connect the ESP8266 module to the AgonLight.
 Load the Telnet client code onto the AgonLight.
 Run the program on the AgonLight computer.
 When prompted, enter a command such as:
+```plaintext
 open <ip address>: Opens a connection to the specified IP on port 23 (default).
 open <ip address> <port>: Opens a connection to the specified IP and port.
 set <Variable> <Value>: Set system variables like BGCOLOR, TEXTCOLOR, PORT, etc.
 quit, bye, q: Exit the program.
+```
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
