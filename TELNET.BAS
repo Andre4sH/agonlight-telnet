@@ -87,6 +87,12 @@
  3061 bellEnabled=0
  3062 debugEnabled=0
  3063 backspacePressed=0
+
+ 3065 addressBookSize=10
+ 3066 DIM addressBook$(addressBookSize, 3)
+ 3067 REM HARD CODED ADDRESS BOOK IN THE SOURCE CODE FOR NOW
+ 3068 REM PARAMETERS: POSITION, NAME, IP ADDRESS, PORT
+ 3069 PROC_AddAddressBookEntry(1, "Level 29", "bbs.fozztexx.com", "23")
  
  3200 REM ---------------------------------------------------------
  3201 REM PROGRAM START HERE
@@ -112,6 +118,8 @@
  3552 IF v$="continue" THEN PROC_EnterTelnetSession: GOTO 3500
  3554 IF v$="config" THEN PROC_PrintConfiguration: GOTO 3500
  3556 IF v$="close" THEN PROC_CloseConnection: GOTO 3500
+ 3558 IF v$="#" THEN PROC_PrintAddressBook:GOTO 3500 
+ 3597 IF LEFT$(v$,1)="#" THEN IF LEN(v$)>1 THEN PROC_OpenAddressBookSession(MID$(v$,2)): GOTO 3500 
  3598 GOTO 3500
  3599 END
 
@@ -207,6 +215,8 @@
  7325 COLOUR textColor
  7330 PRINT "  open <ip address>           Open connection (default port)"
  7335 PRINT "  open <ip address> <port>    Open connection (specify port)"
+ 7336 PRINT "  #                           List address book"
+ 7337 PRINT "  #<int>                      Connect to address book entry <int>"
  7340 PRINT "  continue|c                  Continue current session"
  7345 PRINT "  config                      Current configuration"
  7346 PRINT "  close                       Close connection"
@@ -240,10 +250,13 @@
 
  8000 DEF PROC_OpenAddressBookSession(entry$) 
  8005 PROC_Debug(8005, "PROC_OpenAddressBookSession", "entry:"+entry$)
- 8006 LOCAL ip$, port$
- 8010 ip$=addressBook$(int(entry$), 1)
- 8020 port$=addressBook$(int(entry$), 2)
- 8030 PROC_OpenSession(ip$, port$) 
+ 8006 LOCAL ip$, port$, pos
+ 8007 pos = INT(VAL(entry$))
+ 8008 IF pos > addressBookSize THEN GOTO 8049
+ 8009 IF pos < 0 THEN GOTO 8049
+ 8010 ip$=addressBook$(pos, 1)
+ 8020 port$=addressBook$(pos, 2)
+ 8030 IF ip$ <> "" THEN PROC_OpenSession(ip$, port$) 
  8049 ENDPROC
 
  8200 DEF PROC_InitFile(filename$)
@@ -337,3 +350,15 @@
 11020 file%=OPENOUT filename$
 11030 CLOSE#file%
 11049 ENDPROC
+
+11050 DEF PROC_AddAddressBookEntry(pos, name$, ip$, port$)
+11060 addressBook$(pos, 0) = name$
+11070 addressBook$(pos, 1) = ip$
+11080 addressBook$(pos, 2) = port$
+11099 ENDPROC
+
+11100 DEF PROC_PrintAddressBook
+11110 FOR i=1 TO addressBookSize
+11120 IF addressBook$(i, 0) <> "" THEN PRINT i"). "addressBook$(i, 0)
+11130 NEXT i
+11149 ENDPROC
