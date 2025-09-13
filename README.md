@@ -24,6 +24,7 @@ open <ip address>: Opens a connection to the specified IP on port 23 (default).
 open <ip address> <port>: Opens a connection to the specified IP and port.
 set <Variable> <Value>: Set system variables like BGCOLOR, TEXTCOLOR, PORT, etc.
 quit, bye, q: Exit the program.
+ctrl+c:  Break current session and get back to telnet menu. 'c' to continue the session.
 ```
 
 ## License
